@@ -11,13 +11,17 @@ const connection = mysql.createConnection({
 });
 */
 
-const connection = mysql.createConnection({
+var connectionPool = mysql.createPool({
+  connectionLimit : 10,
   host: "us-cdbr-east-05.cleardb.net",
   user: "b6b5a00ef94b07",
   password: "da38826c",
   database: "heroku_57dd16fb33cc248",
 });
 
+module.exports = connectionPool;
+
+/*
 connection.connect(function (err) {
   if (err) {
     return console.error("error: " + err.message);
@@ -25,6 +29,7 @@ connection.connect(function (err) {
 
   console.log("Connected to the MySQL server.");
 });
+*/
 
 let products = [];
 
@@ -53,8 +58,8 @@ router.get("/", function (req, res, next) {
     // products = results;
     res.json(results);
   };
-
-  connection.query(productsQuery, handleResult);
+  
+  connectionPool.query(productsQuery, handleResult);
 
   // res.json(products);
 });
